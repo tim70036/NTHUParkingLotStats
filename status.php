@@ -43,22 +43,48 @@
 
 
 <script>
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints?limit=1000", true);
-    xhr.setRequestHeader("deviceKey", "jur0mgrSH4gJ8KJr")
-    xhr.setRequestHeader("Content-Type", "application/json")
 
-    /* Set call back function */
-    xhr.onreadystatechange = function(){
-        /* If the request is done and the response is successful */
-        if(xhr.readyState == 4 && xhr.status == 200) 
-        {
-            var data = JSON.parse(xhr.response)
-            console.log(data.dataChannels[0].dataPoints[0].values.value);
-        }
-    }
+/* var for data calculation */
+var maxBlock = 200;
+var x = 0;
 
-    xhr.send();
+
+/* Request data for every minute */
+setInterval(RequestMCSData, 1000);
+var cnt = 0;
+function RequestMCSData()
+{
+  // if(cnt % 2 == 0)
+  //   change(dataset);
+  // else
+  //   change(dataset2);
+
+  // cnt++;
+
+  /* Request 1 data point */
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints", true);
+  xhr.setRequestHeader("deviceKey", "jur0mgrSH4gJ8KJr")
+  xhr.setRequestHeader("Content-Type", "application/json")
+
+  /* Set call back function */
+  xhr.onreadystatechange = function(){
+      /* If the request is done and the response is successful */
+      if(xhr.readyState == 4 && xhr.status == 200) 
+      {
+          var dataPoint = JSON.parse(xhr.response).dataChannels[0].dataPoints[0].values.value
+          console.log(dataPoint);
+
+          /* Update the chart */
+          var newData =  [ { name: 'bike', total: dataPoint+cnt }, { name: 'empty', total: maxBlock - dataPoint  }];
+          change(newData);
+          cnt++;
+      }
+  }
+
+  xhr.send();
+} 
+
 </script>
 
 <script>
@@ -66,35 +92,35 @@
 /* The text on the chart */
 //var div = d3.select("body").append("div").attr("class", "toolTip");
 
-var x = 300;
-
 var dataset = [
-	{ name: 'bike', total: x, percent: 67.9 },
-	{ name: 'empty', total: 1000 - x , percent: 13.1 },
+	{ name: 'bike', total: x },
+	{ name: 'empty', total: maxBlock - x  }
 ];
 
 var y = 500;
 var dataset2 = [
- { name: 'bike', total: y, percent: 67.9 },
-  { name: 'empty', total: 1000 - y , percent: 13.1 },
+  { name: 'bike', total: y },
+  { name: 'empty', total: 1000 - y },
 ];
 
-var dataset3 = [
-  { name: 'Firearms', total: 1000, percent: 50 },
-  { name: 'shit', total: 1000, percent: 50 }
-];
+// var dataset3 = [
+//   { name: 'bike', total: x,  },
+//   { name: 'empty', total: maxBlock - x , percent: 13.1 },
+// ];
 
-var dataset4 = [
-  { name: 'Firearms', total: 2000, percent: 50 },
-  { name: 'shit', total: 1000, percent: 50 }
-];
+// var dataset4 = [
+//   { name: 'bike', total: x, percent: 67.9 },
+//   { name: 'empty', total: maxBlock - x , percent: 13.1 },
+// ];
 
 /* Set up */
 var width = 480,
     height = 250,
     radius = Math.min(width, height) / 2;
+
+/* Color for chart, first data use first color and so on */
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
+    .range(["#ff4d4d", "#ffe6e6", "#7b6888", "#6b486b", "#a05d56"]); 
 
 var arc = d3.svg.arc()
                 .outerRadius(radius - 10)
@@ -136,9 +162,9 @@ g.append("path") // every g has a path
 //這個語言我沒有學過
 //我看得頭很痛
 
-function change() {
+function change(data) {
     g.select("path") // select a path in this g
-    .data(pie(dataset2))
+    .data(pie(data))
     .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
 
 }
@@ -148,7 +174,7 @@ function change() {
 // During the transition, _current is updated in-place by d3.interpolate.
 
 function arcTween(a) {
-    console.log(this._current); // undefine
+    //console.log(this._current); // undefine
     var i = d3.interpolate(this._current, a);
     this._current = i(0);
     return function(t) {
@@ -195,58 +221,58 @@ g2.append("path")
 
 
 
-/* Add element */
-var chart3 = d3.select("#area3").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+// /* Add element */
+// var chart3 = d3.select("#area3").append("svg")
+//                 .attr("width", width)
+//                 .attr("height", height)
+//                 .append("g")
+//                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-var g3 = chart3.selectAll(".arc")
-              .data(pie(dataset3))
-              .enter().append("g")
-              .attr("class", "arc"); /* setting all of g in chart1 to class arc */
-/* Color of chart for different data */
-g3.append("path")
- .style("fill", function(d) { return color(d.data.name); })
- .transition().delay(function(d,i) {return i * 500; })
- .duration(1500)
- .attrTween('d', function(d) 
-   {
-     var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-     return function(t) 
-     {
-        d.endAngle = i(t); 
-        return arc(d)
-     }
-  }); 
+// var g3 = chart3.selectAll(".arc")
+//               .data(pie(dataset3))
+//               .enter().append("g")
+//               .attr("class", "arc"); /* setting all of g in chart1 to class arc */
+// /* Color of chart for different data */
+// g3.append("path")
+//  .style("fill", function(d) { return color(d.data.name); })
+//  .transition().delay(function(d,i) {return i * 500; })
+//  .duration(1500)
+//  .attrTween('d', function(d) 
+//    {
+//      var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+//      return function(t) 
+//      {
+//         d.endAngle = i(t); 
+//         return arc(d)
+//      }
+//   }); 
 
 
-/* Add element */
-var chart4 = d3.select("#area4").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+// /* Add element */
+// var chart4 = d3.select("#area4").append("svg")
+//                 .attr("width", width)
+//                 .attr("height", height)
+//                 .append("g")
+//                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-var g4 = chart4.selectAll(".arc")
-              .data(pie(dataset4))
-              .enter().append("g")
-              .attr("class", "arc"); /* setting all of g in chart1 to class arc */
-/* Color of chart for different data */
-g4.append("path")
- .style("fill", function(d) { return color(d.data.name); })
- .transition().delay(function(d,i) {return i * 500; })
- .duration(1500)
- .attrTween('d', function(d) 
-   {
-     var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-     return function(t) 
-     {
-        d.endAngle = i(t); 
-        return arc(d)
-     }
-  }); 
+// var g4 = chart4.selectAll(".arc")
+//               .data(pie(dataset4))
+//               .enter().append("g")
+//               .attr("class", "arc"); /* setting all of g in chart1 to class arc */
+// /* Color of chart for different data */
+// g4.append("path")
+//  .style("fill", function(d) { return color(d.data.name); })
+//  .transition().delay(function(d,i) {return i * 500; })
+//  .duration(1500)
+//  .attrTween('d', function(d) 
+//    {
+//      var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+//      return function(t) 
+//      {
+//         d.endAngle = i(t); 
+//         return arc(d)
+//      }
+//   }); 
 
 
 
