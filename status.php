@@ -76,9 +76,11 @@ function RequestMCSData()
           console.log(dataPoint);
 
           /* Update the chart */
-          var newData =  [ { name: 'bike', total: dataPoint+cnt }, { name: 'empty', total: maxBlock - dataPoint  }];
-          change(newData);
+          dataPoint += cnt;
           cnt++;
+          var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: maxBlock - dataPoint  }];
+          change(newData);
+
       }
   }
 
@@ -163,9 +165,14 @@ g.append("path") // every g has a path
 //我看得頭很痛
 
 function change(data) {
-    g.select("path") // select a path in this g
+    /* select the path in this g */
+    g.select("path") 
     .data(pie(data))
     .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+
+    /* Show the number of empty block */
+    g.select("text")
+    .text(data[1].total)
 
 }
 
@@ -182,14 +189,19 @@ function arcTween(a) {
     };
 }
 
+g.append("text")
+     .attr("text-anchor", "middle")
+     .style("font-size", "3em")
+     .attr('y', 15)
+     .text(x);
 
 /* Text on chart */
-g.append("text")
-    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-    .attr("dy", ".35em")
-  .transition()
-  .delay(1500)
-    .text(function(d) { return d.data.name; });
+// g.append("text")
+//     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+//     .attr("dy", ".35em")
+//   .transition()
+//   .delay(1500)
+//     .text(function(d) { return d.data.name; });
 
 
 

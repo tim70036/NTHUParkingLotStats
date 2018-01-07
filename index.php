@@ -27,6 +27,9 @@
                 <li class="nav-item">
                     <a id="challenge" class="nav-link link" href="#">Challenge</a>
                 </li>
+                <li class="nav-item">
+                    <a id="history" class="nav-link link" href="#">History</a>
+                </li>
             </ul>
             <ul class="navbar-nav pull-xs-right">
                 <li class="nav-item active">
