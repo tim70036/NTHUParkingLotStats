@@ -65,16 +65,18 @@
 
 /* The text on the chart */
 //var div = d3.select("body").append("div").attr("class", "toolTip");
+
+var x = 300;
+
 var dataset = [
-	{ name: 'Firearms', total: 8124, percent: 67.9 },
-	{ name: 'Knives or cutting instruments', total: 1567, percent: 13.1 },
-	{ name: 'Other weapons', total: 1610, percent: 13.5 },
-	{ name: 'Hands, fists, feet, etc.', total: 660, percent: 5.5 }
+	{ name: 'bike', total: x, percent: 67.9 },
+	{ name: 'empty', total: 1000 - x , percent: 13.1 },
 ];
 
+var y = 500;
 var dataset2 = [
-  { name: 'Firearms', total: 1000, percent: 50 },
-  { name: 'shit', total: 2000, percent: 50 }
+ { name: 'bike', total: y, percent: 67.9 },
+  { name: 'empty', total: 1000 - y , percent: 13.1 },
 ];
 
 var dataset3 = [
@@ -116,7 +118,7 @@ var g = chart1.selectAll(".arc")
               .enter().append("g")
               .attr("class", "arc"); /* setting all of g in chart1 to class arc */
 /* Color of chart for different data */
-g.append("path")
+g.append("path") // every g has a path
  .style("fill", function(d) { return color(d.data.name); })
  .transition().delay(function(d,i) {return i * 500; })
  .duration(1500)
@@ -129,12 +131,15 @@ g.append("path")
  		    return arc(d)
   	 }
 	})
- .each(function(d) { this._current = d; console.log(this._current); }); // store the initial angles 
+ .each(function(d) { this._current = d;}); // store the initial angles 
 
+//這個語言我沒有學過
+//我看得頭很痛
 
 function change() {
-    g.data(pie(dataset2));
-    g.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+    g.select("path") // select a path in this g
+    .data(pie(dataset2))
+    .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
 
 }
 
@@ -143,6 +148,7 @@ function change() {
 // During the transition, _current is updated in-place by d3.interpolate.
 
 function arcTween(a) {
+    console.log(this._current); // undefine
     var i = d3.interpolate(this._current, a);
     this._current = i(0);
     return function(t) {

@@ -93,7 +93,7 @@
             dataType: 'text',
             success: function(response){
                 $("#main-content").html(response);
-                console.log(response);
+                //console.log(response);
             },
             fail: function(response){
                 console.log(response);
