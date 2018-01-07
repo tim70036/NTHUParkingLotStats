@@ -50,7 +50,7 @@ var x = 0;
 
 
 /* Request data for every minute */
-setInterval(RequestMCSData, 1000);
+setInterval(RequestMCSData, 3000);
 var cnt = 0;
 function RequestMCSData()
 {
@@ -161,24 +161,26 @@ g.append("path") // every g has a path
 	})
  .each(function(d) { this._current = d;}); // store the initial angles 
 
-//這個語言我沒有學過
-//我看得頭很痛
+g.append("text")
+     .attr("text-anchor", "middle")
+     .style("font-size", "3em")
+     .attr('y', 15)
+     .text(x);
+
 
 function change(data) {
-    /* select the path in this g */
+    /* Update chart, select the path in this g */
     g.select("path") 
     .data(pie(data))
     .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
 
-    /* Show the number of empty block */
+    /* Show the number of empty block, with a little delay */
     g.select("text")
-    .text(data[1].total)
+    .transition()
+    .delay(1000)
+    .text(data[1].total) // empty number
 
 }
-
-// Store the displayed angles in _current.
-// Then, interpolate from _current to the new angles.
-// During the transition, _current is updated in-place by d3.interpolate.
 
 function arcTween(a) {
     //console.log(this._current); // undefine
@@ -189,11 +191,6 @@ function arcTween(a) {
     };
 }
 
-g.append("text")
-     .attr("text-anchor", "middle")
-     .style("font-size", "3em")
-     .attr('y', 15)
-     .text(x);
 
 /* Text on chart */
 // g.append("text")
