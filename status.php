@@ -41,68 +41,26 @@
     }
 </style>
 
-
-<script>
-
-/* var for data calculation */
-var maxBlock = 200;
-var x = 0;
-
-
-/* Request data for every minute */
-setInterval(RequestMCSData, 3000);
-var cnt = 0;
-function RequestMCSData()
-{
-  // if(cnt % 2 == 0)
-  //   change(dataset);
-  // else
-  //   change(dataset2);
-
-  // cnt++;
-
-  /* Request 1 data point */
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints", true);
-  xhr.setRequestHeader("deviceKey", "jur0mgrSH4gJ8KJr")
-  xhr.setRequestHeader("Content-Type", "application/json")
-
-  /* Set call back function */
-  xhr.onreadystatechange = function(){
-      /* If the request is done and the response is successful */
-      if(xhr.readyState == 4 && xhr.status == 200) 
-      {
-          var dataPoint = JSON.parse(xhr.response).dataChannels[0].dataPoints[0].values.value
-          console.log(dataPoint);
-
-          /* Update the chart */
-          dataPoint += cnt;
-          cnt++;
-          var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: maxBlock - dataPoint  }];
-          change(newData);
-
-      }
-  }
-
-  xhr.send();
-} 
-
-</script>
-
 <script>
 
 /* The text on the chart */
 //var div = d3.select("body").append("div").attr("class", "toolTip");
 
+/* Var setup */
+var x = 0;
+var gArr = [];
+var maxChart = 2;
+var maxBlock = 200;
+
 var dataset = [
-	{ name: 'bike', total: x },
-	{ name: 'empty', total: maxBlock - x  }
+	{ name: 'bike', total: 0 },
+	{ name: 'empty', total: 200  }
 ];
 
 var y = 500;
 var dataset2 = [
-  { name: 'bike', total: y },
-  { name: 'empty', total: 1000 - y },
+  { name: 'bike', total: 0 },
+  { name: 'empty', total: 200},
 ];
 
 // var dataset3 = [
@@ -141,56 +99,74 @@ var chart1 = d3.select("#area1").append("svg")
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-var g = chart1.selectAll(".arc")
+gArr[0] = chart1.selectAll(".arc")
               .data(pie(dataset))
               .enter().append("g")
               .attr("class", "arc"); /* setting all of g in chart1 to class arc */
-/* Color of chart for different data */
-g.append("path") // every g has a path
- .style("fill", function(d) { return color(d.data.name); })
- .transition().delay(function(d,i) {return i * 500; })
- .duration(1500)
- .attrTween('d', function(d) 
-   {
-     var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-     return function(t) 
+
+/* Add element */
+var chart2 = d3.select("#area2").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+gArr[1] = chart2.selectAll(".arc")
+              .data(pie(dataset2))
+              .enter().append("g")
+              .attr("class", "arc"); /* setting all of g in chart1 to class arc */
+
+SetUpChart(gArr[0]);
+SetUpChart(gArr[1]);
+
+console.log(gArr);
+
+function SetUpChart(tar)
+{
+  /* Color of chart for different data */
+  tar.append("path") // every g has a path
+   .style("fill", function(d) { return color(d.data.name); })
+   .transition().delay(function(d,i) {return i * 500; })
+   .duration(1500)
+   .attrTween('d', function(d) 
      {
- 	      d.endAngle = i(t); 
- 		    return arc(d)
-  	 }
-	})
- .each(function(d) { this._current = d;}); // store the initial angles 
+       var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+       return function(t) 
+       {
+          d.endAngle = i(t); 
+          return arc(d)
+       }
+    })
+   .each(function(d) { this._current = d;}); // store the initial angles 
 
-g.append("text")
-     .attr("text-anchor", "middle")
-     .style("font-size", "3em")
-     .attr('y', 15)
-     .text(x);
-
-
-function change(data) {
-    /* Update chart, select the path in this g */
-    g.select("path") 
-    .data(pie(data))
-    .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
-
-    /* Show the number of empty block, with a little delay */
-    g.select("text")
-    .transition()
-    .delay(1000)
-    .text(data[1].total) // empty number
-
+  tar.append("text")
+       .attr("text-anchor", "middle")
+       .style("font-size", "3em")
+       .attr('y', 15)
+       .text(maxBlock);
 }
 
-function arcTween(a) {
-    //console.log(this._current); // undefine
-    var i = d3.interpolate(this._current, a);
-    this._current = i(0);
-    return function(t) {
-        return arc(i(t));
-    };
-}
+// /* Color of chart for different data */
+// g.append("path") // every g has a path
+//  .style("fill", function(d) { return color(d.data.name); })
+//  .transition().delay(function(d,i) {return i * 500; })
+//  .duration(1500)
+//  .attrTween('d', function(d) 
+//    {
+//      var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+//      return function(t) 
+//      {
+//  	      d.endAngle = i(t); 
+//  		    return arc(d)
+//   	 }
+// 	})
+//  .each(function(d) { this._current = d;}); // store the initial angles 
 
+// g.append("text")
+//      .attr("text-anchor", "middle")
+//      .style("font-size", "3em")
+//      .attr('y', 15)
+//      .text(x);
 
 /* Text on chart */
 // g.append("text")
@@ -202,31 +178,29 @@ function arcTween(a) {
 
 
 
-/* Add element */
-var chart2 = d3.select("#area2").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-var g2 = chart2.selectAll(".arc")
-              .data(pie(dataset2))
-              .enter().append("g")
-              .attr("class", "arc"); /* setting all of g in chart1 to class arc */
-/* Color of chart for different data */
-g2.append("path")
- .style("fill", function(d) { return color(d.data.name); })
- .transition().delay(function(d,i) {return i * 500; })
- .duration(1500)
- .attrTween('d', function(d) 
-   {
-     var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
-     return function(t) 
-     {
-        d.endAngle = i(t); 
-        return arc(d)
-     }
-  }); 
+// /* Color of chart for different data */
+// g2.append("path")
+//  .style("fill", function(d) { return color(d.data.name); })
+//  .transition().delay(function(d,i) {return i * 500; })
+//  .duration(1500)
+//  .attrTween('d', function(d) 
+//    {
+//      var i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+//      return function(t) 
+//      {
+//         d.endAngle = i(t); 
+//         return arc(d)
+//      }
+//   })
+//  .each(function(d) { this._current = d;}); // store the initial angles ; 
+
+// g2.append("text")
+//      .attr("text-anchor", "middle")
+//      .style("font-size", "3em")
+//      .attr('y', 15)
+//      .text(x);
+
 
 
 
@@ -301,6 +275,74 @@ g2.append("path")
 function type(d) {
   d.total = +d.total;
   return d;
+}
+
+</script>
+
+
+
+<script>
+var urls = ["https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints",
+           "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints"];
+var devKey = ["jur0mgrSH4gJ8KJr",
+              "jur0mgrSH4gJ8KJr"];
+/* AJAX set up */
+var cnt = [0,0];
+var inc = [1,2];
+var xhrArr = [];
+var CallBack = function(index){
+  return function(){
+    if(xhrArr[index].readyState == 4 && xhrArr[index].status == 200) 
+      {
+          var dataPoint = JSON.parse(xhrArr[index].response).dataChannels[0].dataPoints[0].values.value
+          console.log(dataPoint);
+
+          /* Update the chart */
+          dataPoint += cnt[index];
+          cnt[index] += inc[index];
+          var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: maxBlock - dataPoint  }];
+          change(newData, gArr[index]);
+      }
+  }
+}
+
+/* Request data for every minute */
+setInterval(RequestMCSData, 3000);
+function RequestMCSData()
+{
+    for(var i=0; i<maxChart; i++) 
+    {
+      xhrArr[i]=new XMLHttpRequest();
+      xhrArr[i].open("GET", urls[i], true);
+      xhrArr[i].setRequestHeader("deviceKey", devKey[i]);
+      xhrArr[i].setRequestHeader("Content-Type", "application/json");
+      xhrArr[i].onreadystatechange=CallBack(i);
+      xhrArr[i].send();
+    }
+} 
+
+/* Updating chart */
+function change(data, tar) {
+    /* Update chart, select the path in this g */
+    tar.select("path") 
+    .data(pie(data))
+    .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+
+    /* Show the number of empty block, with a little delay */
+    tar.select("text")
+    .transition()
+    .delay(500)
+    .text(data[1].total) // empty number
+
+}
+
+function arcTween(a) {
+    //console.log(this._current); // undefine
+    var i = d3.interpolate(this._current, a);
+    this._current = i(0);
+    return function(t) {
+        return arc(i(t));
+    };
 }
 
 </script>
