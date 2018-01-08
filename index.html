@@ -87,7 +87,7 @@
         // remove focus on navbar, this causes issue on webterm page (user pushes enter -> reload webterm again)
         $(this).blur();
 
-        var requestTarget = $(this).attr("id") + "html";
+        var requestTarget = $(this).attr("id") + ".html";
         requestAndJumpToPage(requestTarget);
     });
 
