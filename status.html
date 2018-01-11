@@ -229,7 +229,6 @@ var devKey = ["jur0mgrSH4gJ8KJr",
 var dateTime = [];
 /* AJAX set up */
 var cnt = [0,0,0,0];
-var inc = [1,2,1,2];
 var xhrArr = [];
 var CallBack = function(index){
   return function(){
@@ -241,7 +240,7 @@ var CallBack = function(index){
 
           /* Update the chart */
           dataPoint += cnt[index];
-          cnt[index] += inc[index];
+          cnt[index] += (Math.floor((Math.random() * 10) + 1)-5); // -5 ~ 5
           var emptyNum = maxBlock - dataPoint;
           if(emptyNum < 0)  emptyNum = 0, dataPoint = maxBlock; // Check overflow
           var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: emptyNum }];
