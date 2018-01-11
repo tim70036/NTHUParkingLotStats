@@ -1,37 +1,50 @@
+
+<form class="toggle">
+
+  <input type="radio" id="choice1" name="choice" value="creative">
+  <label for="choice1">Speed</label>
+
+  <input type="radio" id="choice2" name="choice" value="productive">
+  <label for="choice2">Quality</label>
+
+  <div id="flap"><span class="content">productive</span></div>
+
+</form>
+
+
 <script>
+const st = {};
 
-/* Request data for every minute */
-setInterval(RequestMCSData, 1000);
-//var cnt = 0;
-function RequestMCSData()
-{
-  // if(cnt % 2 == 0)
-  //   change(dataset);
-  // else
-  //   change(dataset2);
+st.flap = document.querySelector('#flap');
+st.toggle = document.querySelector('.toggle');
 
-  // cnt++;
+st.choice1 = document.querySelector('#choice1');
+st.choice2 = document.querySelector('#choice2');
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints?limit=1000", true);
-  xhr.setRequestHeader("deviceKey", "jur0mgrSH4gJ8KJr")
-  xhr.setRequestHeader("Content-Type", "application/json")
+st.flap.addEventListener('transitionend', () => {
 
-  /* Set call back function */
-  xhr.onreadystatechange = function(){
-      /* If the request is done and the response is successful */
-      if(xhr.readyState == 4 && xhr.status == 200) 
-      {
-          var data = JSON.parse(xhr.response)
-          console.log(data.dataChannels[0].dataPoints[0].values.value);
+    if (st.choice1.checked) {
+        st.toggle.style.transform = 'rotateY(-15deg)';
+        setTimeout(() => st.toggle.style.transform = '', 400);
+    } else {
+        st.toggle.style.transform = 'rotateY(15deg)';
+        setTimeout(() => st.toggle.style.transform = '', 400);
+    }
 
-          /* Update the chart */
-      }
-  }
+})
 
-  xhr.send();
-} 
+st.clickHandler = (e) => {
 
+    if (e.target.tagName === 'LABEL') {
+        setTimeout(() => {
+            st.flap.children[0].textContent = e.target.textContent;
+        }, 250);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    st.flap.children[0].textContent = st.choice2.nextElementSibling.textContent;
+});
+
+document.addEventListener('click', (e) => st.clickHandler(e));
 </script>
-
-fuck
