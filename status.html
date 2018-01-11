@@ -238,11 +238,16 @@ var CallBack = function(index){
           var dataPoint = JSON.parse(xhrArr[index].response).dataChannels[0].dataPoints[0].values.value
           console.log(dataPoint);
 
-          /* Update the chart */
+          /* Random it */
           dataPoint += cnt[index];
           cnt[index] += (Math.floor((Math.random() * 10) + 1)-5); // -5 ~ 5
+
+          /* Check overflow */
           var emptyNum = maxBlock - dataPoint;
-          if(emptyNum < 0)  emptyNum = 0, dataPoint = maxBlock; // Check overflow
+          if(emptyNum < 0)  emptyNum = 0, dataPoint = maxBlock;
+          if(emptyNum > maxBlock) emptyNum = maxBlock, dataPoint = 0;
+
+          /* Update the chart */
           var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: emptyNum }];
           change(newData, gArr[index]);
 
