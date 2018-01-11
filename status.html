@@ -1,6 +1,7 @@
 <!-- Layout for 4 chart -->
 <div style='height:54px;'></div>
 <div class="row">
+  <div style='width:54px;'></div>
   <div class="card-deck">
 
     <!-- 1st floor -->
@@ -11,7 +12,7 @@
         <div style='height:20px;'></div>
       </div>
       <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
+        <small class="text-muted" id="footer1">Retreiving data...</small>
       </div>
     </div>
 
@@ -23,7 +24,7 @@
         <div style='height:20px;'></div>
       </div>
       <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
+        <small class="text-muted" id="footer2">Retreiving data...</small>
       </div>
     </div>
 
@@ -35,7 +36,7 @@
         <div style='height:20px;'></div>
       </div>
       <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
+        <small class="text-muted" id="footer3">Retreiving data...</small>
       </div>
     </div>
    
@@ -47,7 +48,7 @@
         <div style='height:20px;'></div>
       </div>
       <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
+        <small class="text-muted" id="footer4">Retreiving data...</small>
       </div>
     </div>
 
@@ -64,29 +65,10 @@
   .arc path {
     stroke: #fff;
   }
-
-  /* Setting for text on the chart */
-  .toolTip {
-      position: absolute;
-      display: none;
-      width: auto;
-      height: auto;
-      background: none repeat scroll 0 0 white;
-      border: 0 none;
-      border-radius: 8px 8px 8px 8px;
-      box-shadow: -3px 3px 15px #888888;
-      color: black;
-      font: 12px sans-serif;
-      padding: 5px;
-      text-align: center;
-  }
 </style>
 
+
 <script>
-
-/* The text on the chart */
-//var div = d3.select("body").append("div").attr("class", "toolTip");
-
 /* Var setup */
 var x = 0;
 var gArr = [];
@@ -206,6 +188,33 @@ function type(d) {
 
 </script>
 
+
+
+<script>
+/* Update footer time */
+function DateDiff(date1, date2)
+{
+  var diff = {s:0, m:0, h:0, d:0};
+  var diffMs = (date1 - date2); // milliseconds between now & Christmas
+  diff.d = Math.floor(diffMs / 86400000); // days
+  diff.h = Math.floor((diffMs % 86400000) / 3600000); // hours
+  diff.m = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+  diff.s = Math.round(((diffMs % 86400000) % 3600000) % 60000 / 1000 ); // second
+  return diff;
+}
+function UpdateDiffTime()
+{
+  for(var i=0; i<maxChart; i++)
+  {
+    diff = DateDiff(new Date(), dateTime[i]);
+    if(diff.m <= 0)
+      document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.s + " sec ago...";
+    else
+      document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.m + " min ago...";
+  }
+}
+</script>
+
 <script>
 var urls = ["https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints",
             "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints",
@@ -215,6 +224,7 @@ var devKey = ["jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr"];
+var dateTime = [];
 /* AJAX set up */
 var cnt = [0,0,0,0];
 var inc = [1,2,1,2];
@@ -231,12 +241,17 @@ var CallBack = function(index){
           cnt[index] += inc[index];
           var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: maxBlock - dataPoint  }];
           change(newData, gArr[index]);
+
+          /* Record current time for footer update */
+          dateTime[index] = new Date();
       }
   }
 }
 
 /* Request data for every minute */
-setInterval(RequestMCSData, 3000);
+RequestMCSData();
+setInterval(RequestMCSData, 10000);
+setInterval(UpdateDiffTime, 1000);
 function RequestMCSData()
 {
     for(var i=0; i<maxChart; i++) 
@@ -264,7 +279,6 @@ function change(data, tar) {
     .text(data[1].total) // empty number
 
 }
-
 function arcTween(a) {
     //console.log(this._current); // undefine
     var i = d3.interpolate(this._current, a);
@@ -274,3 +288,4 @@ function arcTween(a) {
     };
 }
 </script>
+
