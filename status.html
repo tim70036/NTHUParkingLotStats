@@ -96,9 +96,9 @@ var arc = d3.svg.arc()
 
 var pie = d3.layout.pie()
                     .sort(null)
-                    .startAngle(1.1*Math.PI)
-                    .endAngle(3.1*Math.PI)
                     .value(function(d) { return d.total; });
+                    //                    .startAngle(1.1*Math.PI)
+                    //.endAngle(3.1*Math.PI)
 
 /* Add element */
 var chart1 = d3.select("#area1").append("svg")
@@ -209,8 +209,10 @@ function UpdateDiffTime()
     diff = DateDiff(new Date(), dateTime[i]);
     if(diff.m <= 0)
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.s + " sec ago...";
-    else
+    else if(diff.h<=0)
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.m + " min ago...";
+    else
+      document.getElementById("footer"+(i+1).toString()).innerHTML = "Cannot retrieve data from server...";
   }
 }
 </script>
@@ -233,13 +235,16 @@ var CallBack = function(index){
   return function(){
     if(xhrArr[index].readyState == 4 && xhrArr[index].status == 200) 
       {
+          /* Parse data once received */
           var dataPoint = JSON.parse(xhrArr[index].response).dataChannels[0].dataPoints[0].values.value
           console.log(dataPoint);
 
           /* Update the chart */
           dataPoint += cnt[index];
           cnt[index] += inc[index];
-          var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: maxBlock - dataPoint  }];
+          var emptyNum = maxBlock - dataPoint;
+          if(emptyNum < 0)  emptyNum = 0, dataPoint = maxBlock; // Check overflow
+          var newData =  [ { name: 'bike', total: dataPoint }, { name: 'empty', total: emptyNum }];
           change(newData, gArr[index]);
 
           /* Record current time for footer update */
@@ -248,10 +253,11 @@ var CallBack = function(index){
   }
 }
 
-/* Request data for every minute */
+/* Request data for every minute, and record interval id for clearing in index.html*/
 RequestMCSData();
-setInterval(RequestMCSData, 10000);
-setInterval(UpdateDiffTime, 1000);
+intervalArr.push(setInterval(RequestMCSData, 10000));
+intervalArr.push(setInterval(UpdateDiffTime, 1000));
+
 function RequestMCSData()
 {
     for(var i=0; i<maxChart; i++) 
