@@ -10,6 +10,15 @@
   </div>
 </div>
 
+<div class="row">
+  <div style='width:54px;'></div>
+  <div class="card card-inverse text-white mb-3 text-center card-info" style="width: 71.4rem;">
+    <div style='height:15px;'></div>
+    <h4 id="rec" >Recommend Parking Level : &nbsp None </h4>
+    <div style='height:10px;'></div>
+  </div>
+</div>
+
 <!-- Layout for 4 chart -->
 <div class="row">
   <div style='width:54px;'></div>
@@ -192,7 +201,7 @@ function SetUpChart(tar)
   /* Color of chart for different data */
   tar.append("path") // every g has a path
    .style("fill", function(d) { return color(d.data.name); })
-   .transition().delay(function(d,i) {return i * 500; })
+   .transition().delay(function(d,i) {return i * 50; })
    .duration(1500)
    .attrTween('d', function(d) 
      {
@@ -264,6 +273,7 @@ var devKey = ["jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr"];
 var dateTime = [];
+var maxEmpty = 0;
 /* AJAX set up */
 var cnt = [0,0,0,0];
 var xhrArr = [];
@@ -290,6 +300,15 @@ var CallBack = function(index){
 
           /* Record current time for footer update */
           dateTime[index] = new Date();
+
+          /* Check if this level has max empty block */
+          if(emptyNum > maxEmpty)
+          {
+            maxEmpty = emptyNum;
+
+            /* Update recommend level */
+            $("#rec").html("Recommend Parking Level : &nbsp " + (index+1).toString() );
+          }
       }
   }
 }
