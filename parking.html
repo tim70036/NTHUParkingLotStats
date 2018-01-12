@@ -1,9 +1,9 @@
-
+<script type="text/javascript" src="https://code.jquery.com/ui/1.8.23/jquery-ui.min.js"></script>
 <div style='height:54px;'></div>
 
 <div class="row">
   <div style='width:54px;'></div>
-  <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 71.4rem;">
+  <div class="card card-inverse text-white mb-3 text-center color" style="width: 71.4rem;">
     <div style='height:40px;'></div>
     <h1>Parking Place Status</h1>
     <div style='height:40px;'></div>
@@ -16,8 +16,9 @@
   <div class="card-deck">
 
     <!-- 1st floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16.5rem;">
+    <div class="card card-inverse text-white mb-3 text-center color" style="width: 16.5rem;">
       <div class="card-header">
+        <div style='height:10px;'></div>
         <h4>1st Floor</h4>
       </div>
       <div style='height:40px;'></div>
@@ -26,13 +27,14 @@
       <div class="card-body" id="area1"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
-        <small class="text-muted" id="footer1">Retreiving data...</small>
+        <small class="text-primary" id="footer1">Retreiving data...</small>
       </div>
     </div>
 
     <!-- 2nd floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16.5rem;">
+    <div class="card card-inverse text-white mb-3 text-center color" style="width: 16.5rem;">
       <div class="card-header">
+        <div style='height:10px;'></div>
         <h4>2nd Floor</h4>
       </div>
       <div style='height:40px;'></div>
@@ -41,13 +43,14 @@
       <div class="card-body" id="area2"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
-        <small class="text-muted" id="footer2">Retreiving data...</small>
+        <small class="text-primary" id="footer2">Retreiving data...</small>
       </div>
     </div>
 
     <!-- 3rd floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16.5rem;">
+    <div class="card card-inverse text-white mb-3 text-center color" style="width: 16.5rem;">
       <div class="card-header">
+        <div style='height:10px;'></div>
         <h4>3rd Floor</h4>
       </div>
       <div style='height:40px;'></div>
@@ -56,13 +59,14 @@
       <div class="card-body" id="area3"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
-        <small class="text-muted" id="footer3">Retreiving data...</small>
+        <small class="text-primary" id="footer3">Retreiving data...</small>
       </div>
     </div>
    
     <!-- 4th floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16rem;">
+    <div class="card card-inverse text-white mb-3 text-center color " style="width: 16rem;">
       <div class="card-header">
+        <div style='height:10px;'></div>
         <h4>4th Floor</h4>
       </div>
       <div style='height:40px;'></div>
@@ -71,7 +75,7 @@
       <div class="card-body" id="area4"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
-        <small class="text-muted" id="footer4">Retreiving data...</small>
+        <small class="text-primary" id="footer4">Retreiving data...</small>
       </div>
     </div>
 
@@ -87,6 +91,11 @@
 
   .arc path {
     stroke: #fff;
+  }
+
+  .color {
+    background-color: #404040; 
+    border-color: #404040; 
   }
 </style>
 
@@ -111,7 +120,7 @@ var width = 240*1.1,
 
 /* Color for chart, first data use first color and so on */
 var color = d3.scale.ordinal()
-    .range(["#ff4d4d", "#ffe6e6", "#7b6888", "#6b486b", "#a05d56"]); 
+    .range(["#e6f3ff", "#33adff", "#7b6888", "#6b486b", "#a05d56"]); 
 
 var arc = d3.svg.arc()
                 .outerRadius(radius - height/25)
@@ -230,12 +239,17 @@ function UpdateDiffTime()
   for(var i=0; i<maxChart; i++)
   {
     diff = DateDiff(new Date(), dateTime[i]);
-    if(diff.m <= 0)
+    if(diff.m <= 0){
+      $("#footer"+ (i+1).toString()).switchClass("text-primary","text-success");
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.s + " sec ago...";
+    }
     else if(diff.h<=0)
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.m + " min ago...";
     else
+    {
+      $("#footer"+ (i+1).toString()).switchClass("text-success","text-danger");
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Cannot retrieve data from server...";
+    }
   }
 }
 </script>
