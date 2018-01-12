@@ -1,7 +1,16 @@
-<!-- Layout for 4 chart -->
 <script type="text/javascript" src="https://code.jquery.com/ui/1.8.23/jquery-ui.min.js"></script>
-
 <div style='height:54px;'></div>
+
+<div class="row">
+  <div style='width:54px;'></div>
+  <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 65.6rem;">
+    <div style='height:40px;'></div>
+    <h2>Block Status</h2>
+    <div style='height:40px;'></div>
+  </div>
+</div>
+
+<!-- Layout for 4 chart -->
 <div class="row">
   <div style='width:54px;'></div>
   <div class="card-deck">
@@ -133,8 +142,11 @@ function UpdateDisplay(index, mode, time)
 	});
 
   /* Change text of footer */
-  var t = new Date(time).toLocaleTimeString();
-  var d = new Date(time).toLocaleDateString();
+  var obj = new Date(time);
+  var yr = new Date(time).toLocaleTimeString();
+  var mn = new Date(time).toLocaleDateString();
+  var d = obj.getFullYear() + "/" + (obj.getMonth()+1) + "/" + obj.getDate();
+  var t = obj.getHours() + ":" + obj.getMinutes() + ":" + obj.getSeconds();
   $("#footer"+ (index+1).toString()).fadeOut(delay, function() 
   	{
     $(this).html("since " + t + " " + d).fadeIn(delay);
