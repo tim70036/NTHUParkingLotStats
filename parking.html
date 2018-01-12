@@ -3,9 +3,9 @@
 
 <div class="row">
   <div style='width:54px;'></div>
-  <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 65.6rem;">
+  <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 71.4rem;">
     <div style='height:40px;'></div>
-    <h2>Parking Place Status</h2>
+    <h1>Parking Place Status</h1>
     <div style='height:40px;'></div>
   </div>
 </div>
@@ -16,11 +16,13 @@
   <div class="card-deck">
 
     <!-- 1st floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 15rem;">
+    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16.5rem;">
       <div class="card-header">
         <h4>1st Floor</h4>
       </div>
-       <div style='height:40px;'></div>
+      <div style='height:40px;'></div>
+      Available Park Place
+      <div style='height:10px;'></div>
       <div class="card-body" id="area1"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
@@ -29,11 +31,13 @@
     </div>
 
     <!-- 2nd floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 15rem;">
+    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16.5rem;">
       <div class="card-header">
         <h4>2nd Floor</h4>
       </div>
-       <div style='height:40px;'></div>
+      <div style='height:40px;'></div>
+      Available Park Place
+      <div style='height:10px;'></div>
       <div class="card-body" id="area2"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
@@ -42,11 +46,13 @@
     </div>
 
     <!-- 3rd floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 15rem;">
+    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16.5rem;">
       <div class="card-header">
         <h4>3rd Floor</h4>
       </div>
-       <div style='height:40px;'></div>
+      <div style='height:40px;'></div>
+      Available Park Place
+      <div style='height:10px;'></div>
       <div class="card-body" id="area3"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
@@ -55,11 +61,13 @@
     </div>
    
     <!-- 4th floor -->
-    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 15rem;">
+    <div class="card card-inverse text-white mb-3 text-center" style="background-color: #333333; border-color: #333333; width: 16rem;">
       <div class="card-header">
         <h4>4th Floor</h4>
       </div>
-       <div style='height:40px;'></div>
+      <div style='height:40px;'></div>
+      Available Park Place
+      <div style='height:10px;'></div>
       <div class="card-body" id="area4"> </div>
       <div style='height:40px;'></div>
       <div class="card-footer">
@@ -96,9 +104,9 @@ var initDataset = [
 ];
 
 /* Set up */
-var width = 240,
+var width = 240*1.1,
     textSize = "1em",
-    height = 125,
+    height = 125*1.1,
     radius = Math.min(width, height) / 2;
 
 /* Color for chart, first data use first color and so on */
