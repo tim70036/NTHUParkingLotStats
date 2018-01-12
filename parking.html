@@ -247,8 +247,8 @@ function UpdateDiffTime()
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Updated " + diff.m + " min ago...";
     else
     {
-      $("#footer"+ (i+1).toString()).switchClass("text-success","text-danger");
       document.getElementById("footer"+(i+1).toString()).innerHTML = "Cannot retrieve data from server...";
+      $("#footer"+ (i+1).toString()).switchClass("text-success","text-danger");
     }
   }
 }

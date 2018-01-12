@@ -205,7 +205,7 @@ var CallBack = function(index){
           var data = JSON.parse(xhrArr[index].response).dataChannels[0].dataPoints[0];
           var dataPoint = data.values.value;
           var dataTime = data.recordedAt;
-
+          console.log(dataPoint);
           /* Update display */
           UpdateDisplay(index, Math.round(Math.random()), dataTime);
       }
