@@ -70,11 +70,15 @@
         $.ajax({
         type: 'GET',
             url: requestTarget,
-            // data: postedData,
             dataType: 'text',
             success: function(response){
-                $("#main-content").html(response);
+                //$("#main-content").html(response);
                 //console.log(response);
+
+                $("#main-content").fadeOut(500, function() 
+                    {
+                    $(this).html(response).fadeIn(500);
+                    });
             },
             fail: function(response){
                 console.log(response);
