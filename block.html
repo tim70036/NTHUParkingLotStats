@@ -97,42 +97,14 @@
 </div>
 
 <script>
+
+/* Var set up */
 var maxToggle = 8;
-var frontClear = `
-    <div style='height:20px;'></div>
-        <button type="button" class="btn btn-primary btn-lg">Front Clear</button>
-        <div style='height:5px;'></div>
-        <small class="text-muted" id="footer1">Retreiving data...</small>
-        <div style='height:20px;'></div>
-        `;
-
-var backClear = `
-    <div style='height:20px;'></div>
-        <button type="button" class="btn btn-primary btn-lg">Back Clear</button>
-        <div style='height:5px;'></div>
-        <small class="text-muted" id="footer1">Retreiving data...</small>
-        <div style='height:20px;'></div>
-        `;
-
-var frontBlock = `
-    <div style='height:20px;'></div>
-        <button type="button" class="btn btn-danger btn-lg">Front Block</button>
-        <div style='height:5px;'></div>
-        <small class="text-muted" id="footer1">Retreiving data...</small>
-        <div style='height:20px;'></div>
-        `;
-
-var backBlock = `
-    <div style='height:20px;'></div>
-        <button type="button" class="btn btn-danger btn-lg">Back Block</button>
-        <div style='height:5px;'></div>
-        <small class="text-muted" id="footer1">Retreiving data...</small>
-        <div style='height:20px;'></div>
-        `;
-
 var clearClass = "btn-primary";
 var blockClass = "btn-danger";
-var delay = 300;
+var delay = 200;
+
+/* Update */
 function UpdateDisplay(index, mode, time)
 {
   var html="";
@@ -146,14 +118,12 @@ function UpdateDisplay(index, mode, time)
     /* Change class of button */
     $("#b"+ (index+1).toString()).switchClass(blockClass, clearClass, delay);
     html += " Clear";
-    console.log("shit");
   }
   else
   {
     
     $("#b"+ (index+1).toString()).switchClass(clearClass, blockClass, delay);
     html += " Block"
-    console.log("block");
   }
 
   /* Change text of button */
