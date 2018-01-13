@@ -317,7 +317,7 @@ var CallBack = function(index){
 
 /* Request data for every minute, and record interval id for clearing in index.html*/
 RequestMCSData();
-intervalArr.push(setInterval(RequestMCSData, 10000));
+intervalArr.push(setInterval(RequestMCSData, 5000));
 intervalArr.push(setInterval(UpdateDiffTime, 1000));
 
 function RequestMCSData()
