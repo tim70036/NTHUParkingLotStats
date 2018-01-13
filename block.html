@@ -177,7 +177,7 @@ function UpdateDisplay(index, mode, time)
 </script>
 
 <script>
-var urls = ["https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints",
+var urls = ["https://api.mediatek.com/mcs/v2/devices/DOv0V0Wv/datachannels/isBlocked/datapoints",
       "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints",
       "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints",
       "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints",
@@ -185,7 +185,7 @@ var urls = ["https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/displ
             "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints",
             "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints",
            "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/display/datapoints"];
-var devKey = ["jur0mgrSH4gJ8KJr",
+var devKey = ["8GqQnEIVzaWdtSab",
               "jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr",
@@ -206,8 +206,15 @@ var CallBack = function(index){
           var dataPoint = data.values.value;
           var dataTime = data.recordedAt;
           console.log(dataPoint);
+
+          /* Random it for demo */
+          if(index >= 1)
+          	dataPoint = Math.round(Math.random());
+          
+          
+
           /* Update display */
-          UpdateDisplay(index, Math.round(Math.random()), dataTime);
+          UpdateDisplay(index, dataPoint , dataTime);
       }
   }
 }

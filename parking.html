@@ -194,8 +194,6 @@ SetUpChart(gArr[1]);
 SetUpChart(gArr[2]);
 SetUpChart(gArr[3]);
 
-console.log(gArr);
-
 function SetUpChart(tar)
 {
   /* Color of chart for different data */
@@ -264,12 +262,12 @@ function UpdateDiffTime()
 </script>
 
 <script>
-var urls = ["https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints",
-            "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints",
+var urls = ["https://api.mediatek.com/mcs/v2/devices/DOv0V0Wv/datachannels/1f_bikeNum/datapoints",
+            "https://api.mediatek.com/mcs/v2/devices/DOv0V0Wv/datachannels/2f_bikeNum/datapoints",
             "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints",
            "https://api.mediatek.com/mcs/v2/devices/D50Vc0GM/datachannels/Test_only/datapoints"];
-var devKey = ["jur0mgrSH4gJ8KJr",
-              "jur0mgrSH4gJ8KJr",
+var devKey = ["8GqQnEIVzaWdtSab",
+              "8GqQnEIVzaWdtSab",
               "jur0mgrSH4gJ8KJr",
               "jur0mgrSH4gJ8KJr"];
 var dateTime = [];
@@ -285,9 +283,13 @@ var CallBack = function(index){
           var dataPoint = JSON.parse(xhrArr[index].response).dataChannels[0].dataPoints[0].values.value
           console.log(dataPoint);
 
-          /* Random it */
-          dataPoint += cnt[index];
-          cnt[index] += (Math.floor((Math.random() * 10) + 1)-5); // -5 ~ 5
+          /* Random it for demo */
+          if(index >= 2)
+          {
+             dataPoint += cnt[index];
+             cnt[index] += (Math.floor((Math.random() * 10) + 1)-5); // -5 ~ 5
+          }
+         
 
           /* Check overflow */
           var emptyNum = maxBlock - dataPoint;
