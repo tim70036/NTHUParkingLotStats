@@ -5,4 +5,4 @@ It use d3 library for data Visualization and ajax for request data.
  Also, it shows whether the parking place is blocked or not.
 
  
-[Page Link](https://tim70036.github.io/MCS_Data_Visualization/)
+[Page Link](https://tim70036.github.io/NTHUParkingLotStats/)
